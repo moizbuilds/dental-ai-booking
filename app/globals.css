@@ -1,27 +1,119 @@
+/*
+ * ============================================================
+ * app/globals.css — The design system
+ * ============================================================
+ * WHAT THIS FILE DOES:
+ * Defines the visual identity once as CSS variables ("design
+ * tokens"), then styles every component from those tokens.
+ *
+ * WHY TOKENS: if the clinic wants a different accent color,
+ * you change ONE line here and the whole app follows. The naive
+ * alternative — hex codes scattered through every component —
+ * makes rebranding a find-and-replace nightmare. This is also
+ * exactly how you'd re-skin this app for each consulting client.
+ *
+ * PALETTE — "porcelain & ink":
+ * cool enamel-white surfaces, deep teal-ink text, a single
+ * mouthwash-teal accent. Clinical calm, deliberately NOT the
+ * usual purple-gradient AI look.
+ * ============================================================
+ */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --porcelain: #f7f9fa; /* page background — cool, like enamel */
+  --card: #ffffff;
+  --ink: #0e2a32; /* deep teal-black for text */
+  --ink-soft: #47626b; /* secondary text */
+  --mist: #dce8ea; /* hairline borders, soft fills */
+  --teal: #0f8b8d; /* THE accent. used sparingly */
+  --teal-deep: #0a6466;
+  --teal-wash: #e3f2f2; /* pale teal for chat bubbles */
+  --radius: 18px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  background: var(--porcelain);
+  color: var(--ink);
+  font-family: var(--font-body), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+/* Headlines use the display face; everything else stays quiet. */
+h1,
+h2,
+h3 {
+  font-family: var(--font-display), serif;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+/* Appointment times & data are set in mono — scannable, precise. */
+.mono {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.85em;
+  letter-spacing: -0.01em;
+}
+
+/* ------------------------------------------------------------
+ * Signature element: the "enamel orb" — Maya's avatar.
+ * A soft conic-gradient sphere that slowly breathes while the
+ * AI is thinking. One memorable thing; everything else is calm.
+ * ------------------------------------------------------------ */
+.orb {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: conic-gradient(
+    from 210deg,
+    #0f8b8d,
+    #7fd1cc,
+    #eaf6f5,
+    #b9e2df,
+    #0f8b8d
+  );
+  box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.6),
+    0 2px 8px rgba(15, 139, 141, 0.25);
+}
+
+.orb--thinking {
+  animation: breathe 1.6s ease-in-out infinite;
+}
+
+@keyframes breathe {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.6),
+      0 2px 8px rgba(15, 139, 141, 0.25);
   }
+  50% {
+    transform: scale(1.12);
+    box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.6),
+      0 4px 18px rgba(15, 139, 141, 0.45);
+  }
+}
+
+/* Respect users who turn off animations in their OS settings. */
+@media (prefers-reduced-motion: reduce) {
+  .orb--thinking {
+    animation: none;
+  }
+}
+
+/* Visible keyboard focus — accessibility isn't optional in Tier A. */
+:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 2px;
+  border-radius: 6px;
 }
